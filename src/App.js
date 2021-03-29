@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { GlobalStyle } from "./globalStyle";
+import { Game } from "./components/Game";
+import { AppContent } from "./ui/AppContent";
+import { NewGame } from "./components/NewGame";
 
-function App() {
+export const PLAYER = {
+  FIRST: "X",
+  SECOND: "O",
+};
+
+export function App() {
+  const [firstTurn, setFirstTurn] = useState(PLAYER.FIRST);
+
+  const selectFirstTurn = ({ target }) => setFirstTurn(target.value);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <GlobalStyle />
+      <AppContent>
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <NewGame
+              onTurnChange={selectFirstTurn}
+              selectedPlayer={firstTurn}
+            />
+          )}
+        />
+        <Route path="/game" render={() => <Game firstTurn={firstTurn} />} />
+      </AppContent>
+    </Router>
   );
 }
-
-export default App;
